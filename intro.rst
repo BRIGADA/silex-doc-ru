@@ -1,24 +1,19 @@
-Introduction
-============
+Введение
+========
 
-Silex is a PHP microframework for PHP 5.3. It is built on the shoulders of
-Symfony2 and Pimple and also inspired by sinatra.
+Silex - это микрофреймворк для PHP 5.3. Он построен на основе Symfony2 и Pimple, а также вдохновлён sinatra.
 
-A microframework provides the guts for building simple single-file apps. Silex
-aims to be:
+Микрофреймворк обеспечивает создание простых однофайловых приложений. Silex стремится быть:
 
-* *Concise*: Silex exposes an intuitive and concise API that is fun to use.
+* *Кратким*: Silex предоставляет интуитивно понятныи и краткий API, который удобно использовать.
 
-* *Extensible*: Silex has an extension system based around the Pimple micro
-  service-container that makes it even easier to tie in third party libraries.
+* *Расширяемым*: Silex имеет систему расширений, основанную контейнерах микрослужб Pimple, что упрощает связь со сторонними библиотеками.
 
-* *Testable*: Silex uses Symfony2's HttpKernel which abstracts request and
-  response. This makes it very easy to test apps and the framework itself. It
-  also respects the HTTP specification and encourages its proper use.
+* *Тестируемым*: Silex использует HttpKernel из Symfony2, который абстрагирует запрос и ответ. Это позволяет очень легко тестировать приложение и сам фреймворк. Он также уважает спецификацию HTTP и призывает к её правильному использованию.
 
-In a nutshell, you define controllers and map them to routes, all in one step.
+В двух словах, вы одновременно определяете контроллеры и сопоставляете их с маршрутами.
 
-**Let's go!**::
+**Приступим!**::
 
     // web/index.php
 
@@ -32,17 +27,12 @@ In a nutshell, you define controllers and map them to routes, all in one step.
 
     $app->run();
 
-All that is needed to get access to the Framework is to include the
-autoloader.
+Всё что нужно для получения доступа к фреймворку - это ключить автозагрузчик.
 
-Next we define a route to ``/hello/{name}`` that matches for ``GET`` requests.
-When the route matches, the function is executed and the return value is sent
-back to the client.
+Далее мы определяем соответствующий ``GET``-запросам маршрут ``/hello/{name}``. При соответствии маршрута запросу выполняется функция и возвращаемое из неё значение отправляется обратно клиенту.
 
-Finally, the app is run. Visit ``/hello/world`` to see the result. It's really
-that easy!
+Наконец, приложение запускается. Запросите браузером ``/hello/world``, чтобы увидеть результат. Это действительно так просто!
 
-Installing Silex is as easy as it can get. `Download`_ the archive file,
-extract it, and you're done!
+Установка Silex также проста, как и работа с ним. `Скачайте`_ файл и просто распакуйте его!
 
-.. _Download: http://silex.sensiolabs.org/download
+.. _Скачайте: http://silex.sensiolabs.org/download

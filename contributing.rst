@@ -1,36 +1,28 @@
-Contributing
-============
+Сотрудничество
+==============
 
-We are open to contributions to the Silex code. If you find
-a bug or want to contribute a provider, just follow these
-steps.
+Мы открыты к сотрудничеству касательно кода Silex. Если вы нашли ошибку или хотите поделиться своим провайдером, просто следуйте приведённым ниже шагам.
 
-* Fork `the Silex repository <https://github.com/fabpot/Silex>`_
-  on github.
+* Клонируйте (fork) `репозиторой Silex <https://github.com/fabpot/Silex>`_ на github.
 
-* Make your feature addition or bug fix.
+* Добавьте свои изменения или исправьте ошибку.
 
-* Add tests for it. This is important so we don't break it in a future version unintentionally.
+* Добавьте тесты. Это очень важно, потому что мы можем случано сломать что-то в будущих версиях.
 
-* Optionally, add some technical documentation.
+* Опционально, добавьте некоторые технические подробности в документацию.
 
-* Send a pull request. Bonus points for topic branches.
+* Отправьте запрос (pull request).
 
-If you have a big change or would like to discuss something,
-please join us on the `mailing list
-<http://groups.google.com/group/silex-php>`_.
+Если вы предлагаете значительные изменения, или хотите обсудить что-либо, пожалуйста присоединяйтесь к нашему `списку рассылки <http://groups.google.com/group/silex-php>`_.
 
 .. note::
 
-    Any code you contribute must be licensed under the MIT
-    License.
+    Ваш код должен распространяться по лицензии MIT.
 
-Writing Documentation
-=====================
+Написание документации
+======================
 
-The documentation is written in `reStructuredText
-<http://docutils.sourceforge.net/rst.html>`_ and can be generated using `sphinx
-<http://sphinx-doc.org>`_.
+Документация пишется на `reStructuredText <http://docutils.sourceforge.net/rst.html>`_ и может быть сгенерирована при помощи `sphinx <http://sphinx-doc.org>`_.
 
 .. code-block:: bash
 

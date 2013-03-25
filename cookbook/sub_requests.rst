@@ -1,23 +1,17 @@
 How to make sub-requests
 ========================
 
-Since Silex is based on the ``HttpKernelInterface``, it allows you to simulate
-requests against your application. This means that you can embed a page within
-another, it also allows you to forward a request which is essentially an
-internal redirect that does not change the URL.
+Так как Silex основывается на ``HttpKernelInterface``, он позволяет имитировать запросы к самому себе.
+Это означает, что вы можете встраивать одни страницы в другие, а также пересылать запросы, выполняя внутренние перенаправление, которое не изменяет URL.
 
-Basics
+Основы
 ------
 
-You can make a sub-request by calling the ``handle`` method on the
-``Application``. This method takes three arguments:
+Вы можете делать запросы, вызывая метод ``handle`` из ``Application``. Этот метод принимает три аргумента:
 
-* ``$request``: An instance of the ``Request`` class which represents the
-   HTTP request.
+* ``$request``: Экземпляр класса ``Request``, который представляет HTTP-запрос.
 
-* ``$type``: Must be either ``HttpKernelInterface::MASTER_REQUEST`` or
-  ``HttpKernelInterface::SUB_REQUEST``. Certain listeners are only executed for
-  the master request, so it's important that this is set to ``SUB_REQUEST``.
+* ``$type``: Должен быть или ``HttpKernelInterface::MASTER_REQUEST`` или ``HttpKernelInterface::SUB_REQUEST``. Certain listeners are only executed for the master request, so it's important that this is set to ``SUB_REQUEST``.
 
 * ``$catch``: Catches exceptions and turns them into a response with status code
   ``500``. This argument defaults to ``true``. For sub-requests you will most

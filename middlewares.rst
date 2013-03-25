@@ -1,8 +1,7 @@
 Middlewares
 ===========
 
-Silex allows you to run code, that changes the default Silex behavior, at
-different stages during the handling of a request through *middlewares*:
+Silex позволяет вам запускать код, который изменит заданное по умолчанию поведение, на различных этапах обработки запроса через *middlewaers*:
 
 * *Application middlewares* are triggered independently of the current handled
   request;

@@ -1,24 +1,18 @@
-Services
-========
+Службы
+======
 
-Silex is not only a microframework. It is also a micro service container. It
-does this by extending `Pimple <http://pimple.sensiolabs.org>`_ which provides
-service goodness in just 44 NCLOC.
+Silex это не только микрофреймворк. Это также контейнер микро-служб. Эта возможность реализуется через крохотное расширение `Pimple <http://pimple.sensiolabs.org>`_.
 
-Dependency Injection
---------------------
+Внедрение зависимостей
+----------------------
 
 .. note::
 
-    You can skip this if you already know what Dependency Injection is.
+    Вы можете пропустить этот раздел, если уже знаете что такое "внедрение зависимостей".
 
-Dependency Injection is a design pattern where you pass dependencies to
-services instead of creating them from within the service or relying on
-globals. This generally leads to code that is decoupled, re-usable, flexible
-and testable.
+Инъекция зависимостей это шаблон проектирования, где вы передаёте зависимости в службы вместо создания их в самих службах или использования глобальных данных. Как правило, это позволяет создавать отдельный, гибкий, отлично тестируемый и повторно используемый код.
 
-Here is an example of a class that takes a ``User`` object and stores it as a
-file in JSON format::
+Ниже приведён пример класса, который принимает объект ``User`` и сохраняет его в файле в формате JSON::
 
     class JsonUserPersister
     {
@@ -38,147 +32,121 @@ file in JSON format::
         }
     }
 
-In this simple example the dependency is the ``basePath`` property. It is
-passed to the constructor. This means you can create several independent
-instances with different base paths. Of course dependencies do not have to be
-simple strings. More often they are in fact other services.
+В этом простом примере зависимостью является свойство ``basePath``. Оно передаётся в конструктор. Это означает, что вы можете создать несколько не зависящих друг от друга экземпляров с различными базовыми путями. Конечно, зависимостями могут являться не только простые строки. Чаще всего они являются другими службами.
 
-Container
+Контейнер
 ~~~~~~~~~
 
-A DIC or service container is responsible for creating and storing services.
-It can recursively create dependencies of the requested services and inject
-them. It does so lazily, which means a service is only created when you
-actually need it.
+DIC или контейнер служб отвечает за создание и хранение служб.
+Он может рекурсивно создавать зависимости запрошенных служб и внедрять их.
+Однако он ленив, и создаёт службы лишь тогда, когда вы нуждаетесь в них.
 
-Most containers are quite complex and are configured through XML or YAML
-files.
+Большинство контейнеров являются довольно сложными и конфигурируются через XML или YAML файлы.
 
-Pimple is different.
+Pimple не такой.
 
 Pimple
 ------
 
-Pimple is probably the simplest service container out there. It makes strong
-use of closures and implements the ArrayAccess interface.
+Pimple возможно является самым простым контейнером служб.
+Он силён благодаря использованию замыканий и реализует интерфейс ArrayAccess.
 
-We will start off by creating a new instance of Pimple -- and because
-``Silex\Application`` extends ``Pimple`` all of this applies to Silex as
-well::
+Мы начнём с создания экземпляра Pimple -- и так как ``Silex\Application`` расширяет ``Pimple``, всё нижесказанное применимо и к Silex::
 
     $container = new Pimple();
 
-or::
+или::
 
     $app = new Silex\Application();
 
-Parameters
-~~~~~~~~~~
+Параметры
+~~~~~~~~~
 
-You can set parameters (which are usually strings) by setting an array key on
-the container::
+Вы можете задавать параметры (которые обычно являются строками) устанавливая их через ключи массива контейнера::
 
     $app['some_parameter'] = 'value';
 
-The array key can be anything, by convention periods are used for
-namespacing::
+Ключи массива могут быть любыми, по соглашению точки используются для указания пространства имён::
 
     $app['asset.host'] = 'http://cdn.mysite.com/';
 
-Reading parameter values is possible with the same syntax::
+Чтение значений параметров выполняется в аналогичном синтаксисе::
 
     echo $app['some_parameter'];
 
-Service definitions
-~~~~~~~~~~~~~~~~~~~
+Определение службы
+~~~~~~~~~~~~~~~~~~
 
-Defining services is no different than defining parameters. You just set an
-array key on the container to be a closure. However, when you retrieve the
-service, the closure is executed. This allows for lazy service creation::
+Определение службы не отличается от определения параметра. Вы просто связываете ключ массива контейнера с замыканием. Однако, когда вы запросите службу вызовется замыкание. Это позволяет сделать "ленивое" создание служб::
 
     $app['some_service'] = function () {
         return new Service();
     };
 
-And to retrieve the service, use::
+И для получения службы используйте::
 
     $service = $app['some_service'];
 
-Every time you call ``$app['some_service']``, a new instance of the service is
-created.
+Каждый раз при вызове ``$app['some_service']`` создаётся экземпляр службы.
 
-Shared services
-~~~~~~~~~~~~~~~
+Общие службы
+~~~~~~~~~~~~
 
-You may want to use the same instance of a service across all of your code. In
-order to do that you can make a *shared* service::
+Вам может потребоваться использовать один и тот же экземпляр службы во всех частях своего кода.
+Для реализации этого, сделайте *общую* службу::
 
     $app['some_service'] = $app->share(function () {
         return new Service();
     });
 
-This will create the service on first invocation, and then return the existing
-instance on any subsequent access.
+Этот код создаёт службу при первом вызове, а при последующих обращениях возвращает сеществующий экземпляр.
 
-Access container from closure
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Доступ к контейнеру из замыкания
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In many cases you will want to access the service container from within a
-service definition closure. For example when fetching services the current
-service depends on.
+Во множестве случаев вам может потребоваться доступ к контейнеру служб из определяющего службу замыкания. Например, когда надо получить службы, от которых зависит текущая.
 
-Because of this, the container is passed to the closure as an argument::
+Для этого контейнер передаётся в замыкание в качестве аргумента::
 
     $app['some_service'] = function ($app) {
         return new Service($app['some_other_service'], $app['some_service.config']);
     };
 
-Here you can see an example of Dependency Injection. ``some_service`` depends
-on ``some_other_service`` and takes ``some_service.config`` as configuration
-options. The dependency is only created when ``some_service`` is accessed, and
-it is possible to replace either of the dependencies by simply overriding
-those definitions.
+Здесь вы видите пример внедрения зависимостей. ``some_service`` зависит от ``some_other_service`` и принимает ``some_service.config`` в качестве параметров конфигурации. Зависимость создаётся только при доступе к ``some_service``, и можно заменить любую из зависимостей, просто переопределив их определения.
 
 .. note::
 
-    This also works for shared services.
+    Это также работает для общих служб.
 
-Protected closures
-~~~~~~~~~~~~~~~~~~
+Защищённые замыкания
+~~~~~~~~~~~~~~~~~~~~
 
-Because the container sees closures as factories for services, it will always
-execute them when reading them.
+Поскольку контейнер видит замыкания как фабрики для служб, он всегда исполняет их при чтении.
 
-In some cases you will however want to store a closure as a parameter, so that
-you can fetch it and execute it yourself -- with your own arguments.
+Однако, в некоторых случаях вам может сохранить замыкание как параметр, чтобы вы сами могли получить его исполнить со своими собственными аргументами.
 
-This is why Pimple allows you to protect your closures from being executed, by
-using the ``protect`` method::
+Это можно сделать в Pimple при помощи метода ``protect``::
 
     $app['closure_parameter'] = $app->protect(function ($a, $b) {
         return $a + $b;
     });
 
-    // will not execute the closure
+    // замыкание не исполняется
     $add = $app['closure_parameter'];
 
-    // calling it now
+    // теперь вызовем его
     echo $add(2, 3);
 
-Note that protected closures do not get access to the container.
+Обратите внимание, защищённые замыкания не получают доступа к контейнеру.
 
-Core services
--------------
+Основные службы
+---------------
 
-Silex defines a range of services which can be used or replaced. You probably
-don't want to mess with most of them.
+Silex определяет набор служб, которые можно использовать или переопределить. Вполне возможно, что большинством вы не пожелаете возиться.
 
-* **request**: Contains the current request object, which is an instance of
-  `Request
-  <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_.
-  It gives you access to ``GET``, ``POST`` parameters and lots more!
+* **request**: Содержит текущий объект запроса, являющийся экземпляром `Request <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_. Он даёт вам доступ к параметрам ``GET``, ``POST`` и некоторым другим!
 
-  Example usage::
+  Пример использования::
 
     $id = $app['request']->get('id');
 
@@ -186,76 +154,47 @@ don't want to mess with most of them.
   it from within a controller, an application before/after middlewares, or an
   error handler.
 
-* **routes**: The `RouteCollection
-  <http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html>`_
-  that is used internally. You can add, modify, read routes.
+* **routes**: `RouteCollection <http://api.symfony.com/master/Symfony/Component/Routing/RouteCollection.html>`_, который используется внутренними процедурами. Вы можете добавлять, изменять и читать маршруты.
 
-* **controllers**: The ``Silex\ControllerCollection`` that is used internally.
-  Check the *Internals* chapter for more information.
+* **controllers**: ``Silex\ControllerCollection``, который используется внутренними процедурами. Для подробностей смотри главу *Internals*.
 
-* **dispatcher**: The `EventDispatcher
-  <http://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html>`_
-  that is used internally. It is the core of the Symfony2 system and is used
-  quite a bit by Silex.
+* **dispatcher**: `EventDispatcher <http://api.symfony.com/master/Symfony/Component/EventDispatcher/EventDispatcher.html>`_, который используется внутренними процедурами. Является ядром Symfony2, а также используется Silex.
 
-* **resolver**: The `ControllerResolver
-  <http://api.symfony.com/master/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_
-  that is used internally. It takes care of executing the controller with the
-  right arguments.
+* **resolver**: `ControllerResolver <http://api.symfony.com/master/Symfony/Component/HttpKernel/Controller/ControllerResolver.html>`_, который используется внутренними процедурами. Заботится о выполнении контроллера с правильными аргументами.
 
-* **kernel**: The `HttpKernel
-  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html>`_
-  that is used internally. The HttpKernel is the heart of Symfony2, it takes a
-  Request as input and returns a Response as output.
+* **kernel**: `HttpKernel <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpKernel.html>`_, который используется внутренними процедурами. HttpKernel -- это сердце Symfony2, на входе получает Request и возвращает Response на выходе.
 
-* **request_context**: The request context is a simplified representation of
-  the request that is used by the Router and the UrlGenerator.
+* **request_context**: Контекст запроса -- это упрощённое представление запроса, которое используется Router и UrlGenerator.
 
-* **exception_handler**: The Exception handler is the default handler that is
-  used when you don't register one via the ``error()`` method or if your handler
-  does not return a Response. Disable it with
-  ``$app['exception_handler']->disable()``.
+* **exception_handler**: Обработчик исключаний по умолчанию, который используется когда вы не зарегистрировали ни одного своего через вызов метода ``error()`` или если ваш обработчик не возвращает Response. Отключается с помощъю ``$app['exception_handler']->disable()``.
 
-* **logger**: A
-  `LoggerInterface
-  <http://api.symfony.com/master/Symfony/Component/HttpKernel/Log/LoggerInterface.html>`_
-  instance. By default, logging is disabled as the value is set to ``null``.
-  When the Symfony2 Monolog bridge is installed, Monolog is automatically used
-  as the default logger.
+* **logger**: Экземпляр `LoggerInterface <http://api.symfony.com/master/Symfony/Component/HttpKernel/Log/LoggerInterface.html>`_. По умолчанию, логирование отключается установкой значения ``null``. Если установлена связка Symfony2 - Monolog, то в качестве логгера по умолчанию используется Monolog.
 
 .. note::
 
-    All of these Silex core services are shared.
+    Все эти основные службы Silex являются общими.
 
-Core parameters
----------------
+Основные параметры
+------------------
 
-* **request.http_port** (optional): Allows you to override the default port
-  for non-HTTPS URLs. If the current request is HTTP, it will always use the
-  current port.
+* **request.http_port** (опциональный): Позволяет вам переопределить порт по умолчанию для не-HTTPS URL'ов. Если текущий запрос является HTTP, всегда используется текущий порт.
 
-  Defaults to 80.
+  Значение по умолчанию 80.
 
-  This parameter can be used by the ``UrlGeneratorProvider``.
+  Этот параметр используется ``UrlGeneratorProvider``.
 
-* **request.https_port** (optional): Allows you to override the default port
-  for HTTPS URLs. If the current request is HTTPS, it will always use the
-  current port.
+* **request.https_port** (опциональный): Позволяет вам переопределить порт по умолчанию для HTTPS URL'ов. Если текущий запрос является HTTPS, всегда используется текущий порт.
 
-  Defaults to 443.
+  Значение по умолчанию 443.
 
-  This parameter can be used by the ``UrlGeneratorProvider``.
+  Этот параметр используется ``UrlGeneratorProvider``.
 
-* **locale** (optional): The locale of the user. When set before any request
-  handling, it defines the default locale (``en`` by default). When a request
-  is being handled, it is automatically set according to the ``_locale``
-  request attribute of the current route.
+* **locale** (опциональный): Локаль пользователя. Когда установлено перед обработкой любого запроса, определяет исходную локаль (``en`` по умолчанию). При обработке запроса автоматически устанавливается соответственно атрибуту запроса ``_locale`` текущего маршрута.
 
-* **debug** (optional): Returns whether or not the application is running in
-  debug mode.
+* **debug** (опциональный): Возвращает истину, если приложение запущено в отладочном режиме.
 
-  Defaults to false.
+  Значение по умолчанию ``false``.
 
-* **charset** (optional): The charset to use for Responses.
+* **charset** (опциональный): Набор символов используемый для ответов.
 
-  Defaults to UTF-8.
+  Значение по умолчанию UTF-8.

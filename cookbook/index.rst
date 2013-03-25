@@ -1,7 +1,7 @@
-Cookbook
-========
+Поваренная книга
+================
 
-The cookbook section contains recipes for solving specific problems.
+Этот раздел раздел содержит рецепты решения определённых проблем.
 
 .. toctree::
     :maxdepth: 1
@@ -15,23 +15,19 @@ The cookbook section contains recipes for solving specific problems.
     sub_requests
     error_handler
 
-Recipes
+Рецепты
 -------
 
-* :doc:`Accepting a JSON request body <json_request_body>` A common need when
-  building a restful API is the ability to accept a JSON encoded entity from
-  the request body.
+* :doc:`Приём JSON в теле запроса <json_request_body>` Общим требованием к удобному API является приём закодированных в JSON сущностей.
 
-* :doc:`Translating Validation Messages<translating_validation_messages>`.
+* :doc:`Перевод сообщений валидации <translating_validation_messages>`.
 
-* :doc:`How to use PdoSessionStorage to store sessions in the database
-  <session_storage>`.
+* :doc:`Как использовать PdoSessionStorage для хранения сессий в базе данных <session_storage>`.
 
-* :doc:`How to disable the CSRF Protection on a form using the FormExtension
-  <form_no_csrf>`.
+* :doc:`Как отключить CSRF-защиту форм используя FormExtension <form_no_csrf>`.
 
-* :doc:`How to use YAML to configure validation <validator_yaml>`.
+* :doc:`Как использовать YAML для настройки валидации <validator_yaml>`.
 
-* :doc:`How to make sub-requests <sub_requests>`.
+* :doc:`Как выполнять суб-запросы <sub_requests>`.
 
-* :doc:`How to convert errors to exceptions <error_handler>`.
+* :doc:`Как конвертировать ошибки в исключения <error_handler>`.

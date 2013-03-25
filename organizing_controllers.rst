@@ -1,25 +1,24 @@
-Organizing Controllers
-======================
+Организация контроллеров
+========================
 
-When your application starts to define too many controllers, you might want to
-group them logically::
+Когда ваше приложение начнёт определять слишком много контроллеров, вам захочется сгруппировать их логически::
 
-    // define controllers for a blog
+    // определяем контроллеры для блога
     $blog = $app['controllers_factory'];
     $blog->get('/', function () {
-        return 'Blog home page';
+        return 'Главная страница блога';
     });
     // ...
 
-    // define controllers for a forum
+    // определяем контроллеры для форума
     $forum = $app['controllers_factory'];
     $forum->get('/', function () {
-        return 'Forum home page';
+        return 'Главная страница форума';
     });
 
-    // define "global" controllers
+    // определяем "глобальные" контроллеры
     $app->get('/', function () {
-        return 'Main home page';
+        return 'Главная страница сайта';
     });
 
     $app->mount('/blog', $blog);
@@ -27,47 +26,36 @@ group them logically::
 
 .. note::
 
-    ``$app['controllers_factory']`` is a factory that returns a new instance
-    of ``ControllerCollection`` when used.
+    ``$app['controllers_factory']`` - это фабрика, которая при использовании возвращает новый экземпляр ``ControllerCollection``.
 
-``mount()`` prefixes all routes with the given prefix and merges them into the
-main Application. So, ``/`` will map to the main home page, ``/blog/`` to the
-blog home page, and ``/forum/`` to the forum home page.
+``mount()`` дополняет все маршруты указанным префиксом и объединяет их с главным приложением. Таким образом, ``/`` будет соответствовать главной странице сайта, ``/blog/`` - главной странице блога, а ``/forum/`` - главной странице форума.
 
 .. caution::
 
-    When mounting a route collection under ``/blog``, it is not possible to
-    define a route for the ``/blog`` URL. The shortest possible URL is
-    ``/blog/``.
+    Когда коллекция маршрутов подключается как ``/blog``, нет никакой возможности определить маршрут для URL ``/blog``. Самый короткий возможный URL будет ``/blog/``.
 
 .. note::
 
-    When calling ``get()``, ``match()``, or any other HTTP methods on the
-    Application, you are in fact calling them on a default instance of
-    ``ControllerCollection`` (stored in ``$app['controllers']``).
+    При вызове ``get()``, ``match()`` или любого другого HTTP-метода в приложении, по факту вы вызываете их для экземпляра по умолчанию ``ControllerCollection`` (сохранённому в ``$app['controllers']``).
 
-Another benefit is the ability to apply settings on a set of controllers very
-easily. Building on the example from the middleware section, here is how you
-would secure all controllers for the backend collection::
+Ещё одним преимуществом является возможность очень простого применения настроек к набору контроллеров. Опираясь на пример из предыдущего раздела, мы продемонстрируем, как можно защитить все контроллеры бэкэнд-коллекции::
 
     $backend = $app['controllers_factory'];
 
-    // ensure that all controllers require logged-in users
+    // требовать залогиненности пользователей
     $backend->before($mustBeLogged);
 
 .. tip::
 
-    For a better readability, you can split each controller collection into a
-    separate file::
+    Для лучшей читаемости вы можете разделить коллекции контроллеров по отдельным файлам::
 
         // blog.php
         $blog = $app['controllers_factory'];
-        $blog->get('/', function () { return 'Blog home page'; });
+        $blog->get('/', function () { return 'Главная страница блога'; });
 
         return $blog;
 
         // app.php
         $app->mount('/blog', include 'blog.php');
 
-    Instead of requiring a file, you can also create a :doc:`Controller
-    provider </providers#controllers-providers>`.
+    Вместо разбиения по файлам, вы можете создать :doc:`провайдер Controller </providers#controllers-providers>`.

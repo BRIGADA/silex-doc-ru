@@ -1,11 +1,9 @@
-Translating Validation Messages
-===============================
+Перевод сообщений валидации
+===========================
 
-When working with Symfony2 validator, a common task would be to show localized
-validation messages.
+При работе с валидаторами Symfony2, общей задачей будет отображение локализованных сообщений.
 
-In order to do that, you will need to register translator and point to
-translated resources::
+Для того, чтобы сделать это, вам необходимо зарегистрировать переводчик указать переведённые ресурсы::
 
     $app->register(new Silex\Provider\TranslationServiceProvider(), array(
         'locale' => 'sr_Latn',
@@ -17,4 +15,4 @@ translated resources::
         $app['translator']->addResource('xlf', __DIR__.'/vendor/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/translations/validators.sr_Latn.xlf', 'sr_Latn', 'validators');
     });
 
-And that's all you need to load translations from Symfony2 ``xlf`` files.
+Этого достаточно для загрузки переводов из файлов ``xlf``.

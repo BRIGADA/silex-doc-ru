@@ -1,36 +1,26 @@
-How to convert errors to exceptions
-===================================
+Как конвертировать ошибки в исключения
+======================================
 
-Silex will catch exceptions that are thrown from within a request/response
-cycle. It will however *not* catch PHP errors and notices. You can catch them
-by converting them to exceptions, this recipe will tell you how.
+Silex отлавливает исключения, которые выбрасываются из циклов запроса/ответа. Однако он *не ловит* ошибки и предупреждения PHP. Однако вы сможете следить за ними, если конвертируете их в исключения. Этот рецепт расскажет как это сделать.
 
-Why does Silex not do this?
----------------------------
+Почему Silex не делает этого?
+-----------------------------
 
-Silex could do this automatically in theory, but there is a reason why it does
-not. Silex acts as a library, this means that it does not mess with any global
-state. Since error handlers are global in PHP, it is your responsibility as a
-user to register them.
+Silex может это делать в теории, но есть причина по которой не делает. Silex выступает в качестве библиотеки, это означает что он не связывается ни с каким глобальным состоянием. Так как обработчики ошибок являются глобальными в PHP, то вашей обязанностью как пользователя является их регистрация.
 
-Registering the ErrorHandler
-----------------------------
+Регистрация обработчика ошибок
+------------------------------
 
-Fortunately, Silex ships with an ``ErrorHandler`` (it's part of the
-``HttpKernel`` package) that solves this issue. It converts all errors to
-exceptions, and exceptions can be caught by Silex.
+К счастью, вместе с Silex поставляется класс ``ErrorHandler`` (он является частью пакета ``HttpKernel``), который решает эту проблему. Он конвертирует ошибки в исключения, а исключения отслеживаются Silex.
 
-You register it by calling the static ``register`` method::
+Вы можете зарегистрировать этот класс, вызвав статический метод ``register``::
 
     use Symfony\Component\HttpKernel\Debug\ErrorHandler;
 
     ErrorHandler::register();
 
-It is recommended that you do this in your front controller, i.e.
-``web/index.php``.
+Рекомендуется выполнять это действие в вашем фронт-контроллере, например в ``web/index.php``.
 
 .. note::
 
-    The ``ErrorHandler`` has nothing to do with the ``ExceptionHandler``. The
-    ``ExceptionHandler`` is responsible for displaying caught exceptions
-    nicely.
+    ``ErrorHandler`` не имеет ничего общего с ``ExceptionHandler``. ``ExceptionHandler`` отвечает за красивый вывод пойманного исключения.

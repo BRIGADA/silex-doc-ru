@@ -1,22 +1,12 @@
-How to use PdoSessionStorage to store sessions in the database
-==============================================================
+Как использовать PdoSessionStorage для хранения сессий в базе данных
+====================================================================
 
-By default, the :doc:`SessionServiceProvider </providers/session>` writes
-session information in files using Symfony2 NativeFileSessionStorage. Most
-medium to large websites use a database to store sessions instead of files,
-because databases are easier to use and scale in a multi-webserver
-environment.
+По умолчанию, :doc:`SessionServiceProvider </providers/session>` записывает сессионную информацию в файлы используя NativeFileSessionStorage из Symfony2. Большинство средних и крупных веб-сайтов вместо фалов используют базу данных, так как базы данных проще использовать и масштабировать для среды с несколькими веб-серверами.
 
-Symfony2's `NativeSessionStorage
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeSessionStorage.html>`_
-has multiple storage handlers and one of them uses PDO to store sessions,
-`PdoSessionHandler
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.html>`_.
-To use it, replace the ``session.storage.handler`` service in your application
-like explained below.
+В Symfony2 есть несколько обработчиков для хранения сессий и один из них использует PDO: `PdoSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.html>`_. Для его задействования, замените службу ``session.storage.handler`` вашего приложения так, как показано ниже.
 
-With a dedicated PDO service
-----------------------------
+С выделенной PDO-службой 
+------------------------
 
 .. code-block:: php
 
@@ -51,11 +41,10 @@ With a dedicated PDO service
         );
     });
 
-Using the DoctrineServiceProvider
----------------------------------
+Использование DoctrineServiceProvider
+-------------------------------------
 
-When using the :doc:`DoctrineServiceProvider </providers/doctrine>` You don't
-have to make another database connection, simply pass the getWrappedConnection method.
+При использовании :doc:`DoctrineServiceProvider </providers/doctrine>` вам не требуется иметь отдельное соединение с базой данных, просто передайте метод ``getWrappedConnection``.
 
 .. code-block:: php
 
@@ -78,15 +67,13 @@ have to make another database connection, simply pass the getWrappedConnection m
         );
     });
 
-Database structure
-------------------
+Структура базы данных
+---------------------
 
-PdoSessionStorage needs a database table with 3 columns:
+Для PdoSessionStorage требуется таблица базы данных с 3 столбцами:
 
-* ``session_id``: ID column (VARCHAR(255) or larger)
-* ``session_value``: Value column (TEXT or CLOB)
-* ``session_time``: Time column (INTEGER)
+* ``session_id``: Столбец ID (VARCHAR(255) или больше)
+* ``session_value``: Столбец значений (TEXT или CLOB)
+* ``session_time``: Столбец времени (INTEGER)
 
-You can find examples of SQL statements to create the session table in the
-`Symfony2 cookbook
-<http://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html#example-sql-statements>`_
+Примеры SQL-выражений для создания таблицы сессий можно найти в `Symfony2 cookbook <http://symfony.com/doc/current/cookbook/configuration/pdo_session_storage.html#example-sql-statements>`_

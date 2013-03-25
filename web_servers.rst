@@ -1,10 +1,10 @@
-Webserver Configuration
-=======================
+Конфигурирование веб-сервера
+============================
 
 Apache
 ------
 
-If you are using Apache you can use a ``.htaccess`` file for this:
+Если вы используете Apache, то задействуйте следующий файл ``.htaccess``:
 
 .. code-block:: apache
 
@@ -19,12 +19,9 @@ If you are using Apache you can use a ``.htaccess`` file for this:
 
 .. note::
 
-    If your site is not at the webroot level you will have to uncomment the
-    ``RewriteBase`` statement and adjust the path to point to your directory,
-    relative from the webroot.
+    Если ваш сайт располагается не в корне, вам необходимо раскоментировать выражение ``RewriteBase`` и указать путь, соответствующий вашему каталогу, относительно корня сайта.
 
-Alternatively, if you use Apache 2.2.16 or higher, you can use the
-`FallbackResource directive`_ so make your .htaccess even easier:
+Если вы используете Apache 2.2.16 или выше, то вы можете использовать директиву `FallbackResource`_ для упрощения .htaccess:
 
 .. code-block:: apache
 
@@ -32,29 +29,27 @@ Alternatively, if you use Apache 2.2.16 or higher, you can use the
 
 .. note::
 
-    If your site is not at the webroot level you will have to adjust the path to
-    point to your directory, relative from the webroot.
+    Если ваш сайт не располагается в корне, вам необходимо скорректировать путь до вашего каталога относительно корня.
 
 nginx
 -----
 
-If you are using nginx, configure your vhost to forward non-existent
-resources to ``index.php``:
+Если вы используете nginx, сконфигурируйте ваш vhost таким образом, чтобы все несуществующие ресурсы направлялись в ``index.php``:
 
 .. code-block:: nginx
 
     server {
-        #site root is redirected to the app boot script
+        #корень сайта: перенаправляется в загрузочный скрипт приложения
         location = / {
             try_files @site @site;
         }
 
-        #all other locations try other files first and go to our front controller if none of them exists
+        #все прочие расположения: вначале проверяется существование файлов, а затем идём в наш фронт-контроллер
         location / {
             try_files $uri $uri/ @site;
         }
 
-        #return 404 for all php files as we do have a front controller
+        #возвращаем 404 для всех php-файлов, т.к. у нас есть фронт-контроллер
         location ~ \.php$ {
             return 404;
         }
@@ -63,7 +58,7 @@ resources to ``index.php``:
             fastcgi_pass   unix:/var/run/php-fpm/www.sock;
             include fastcgi_params;
             fastcgi_param  SCRIPT_FILENAME $document_root/index.php;
-            #uncomment when running via https
+            #раскоментировать при использовании https
             #fastcgi_param HTTPS on;
         }
     }
@@ -71,8 +66,7 @@ resources to ``index.php``:
 IIS
 ---
 
-If you are using the Internet Information Services from Windows, you can use
-this sample ``web.config`` file:
+Если вы используете Internet Information Services из Windows, вы можете использовать следующий пример файла ``web.config``:
 
 .. code-block:: xml
 
@@ -102,8 +96,7 @@ this sample ``web.config`` file:
 Lighttpd
 --------
 
-If you are using lighttpd, use this sample ``simple-vhost`` as a starting
-point:
+Если вы используете lighttpd, воспользуйтесь примером ``simple-vhost`` в качестве отправной точки:
 
 .. code-block:: lighttpd
 
@@ -117,15 +110,12 @@ point:
         "^(/[^\?]*)(\?.*)?" => "/index.php$1$2"
     )
 
-.. _FallbackResource directive: http://www.adayinthelifeof.nl/2012/01/21/apaches-fallbackresource-your-new-htaccess-command/
+.. _FallbackResource: http://www.adayinthelifeof.nl/2012/01/21/apaches-fallbackresource-your-new-htaccess-command/
 
 PHP 5.4
 -------
 
-PHP 5.4 ships with a built-in webserver for development. This server allows
-you to run silex without any configuration. However, in order to serve static
-files, you'll have to make sure your front controller returns false in that
-case::
+PHP 5.4 поставляется вместе со встроенным веб-сервером для разработки. Этот сервер позволяет вам запускать Silex вообще без конфигурирования. Однако, для обслуживания статичных файлов вам нужно убедиться, что ваш фронт-контроллер возвращает ``false`` в этом случае::
 
     // web/index.php
 
@@ -138,16 +128,14 @@ case::
     $app->run();
 
 
-Assuming your front controller is at ``web/index.php``, you can start the
-server from the command-line with this command:
+Если ваш фронт-контроллер располагается в файле ``web/index.php``, вы можете запустить сервер из командной строки:
 
 .. code-block:: text
 
     $ php -S localhost:8080 -t web web/index.php
 
-Now the application should be running at ``http://localhost:8080``.
+Теперь приложение должно быть доступно по адресу ``http://localhost:8080``.
 
 .. note::
 
-    This server is for development only. It is **not** recommended to use it
-    in production.
+    Это сервер только для разработки. Его использование для реальных проектов **НЕ РЕКОМЕНДУЕТСЯ**.

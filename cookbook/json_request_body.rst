@@ -1,22 +1,19 @@
-Accepting a JSON request body
-=============================
+Приём JSON в теле запроса
+=========================
 
-A common need when building a restful API is the ability to accept a JSON
-encoded entity from the request body.
+Общим требованием к удобному API является возможность приёма JSON-сущностей в теле запроса.
 
-An example for such an API could be a blog post creation.
+Примером такого API может быть создание записи в блоге.
 
-Example API
------------
+Пример API
+----------
 
-In this example we will create an API for creating a blog post. The following
-is a spec of how we want it to work.
+В этом примере мы создадим API, который позволит публиковать сообщения в блог. Далее идёт описание того, что мы хотим получить.
 
-Request
-~~~~~~~
+Запрос
+~~~~~~
 
-In the request we send the data for the blog post as a JSON object. We also
-indicate that using the ``Content-Type`` header:
+В запросе мы посылаем данные для записи в блоге как JSON-объект. О используемом формате мы сообщаем в заголовке ``Content-Type``:
 
 .. code-block:: text
 
@@ -25,14 +22,12 @@ indicate that using the ``Content-Type`` header:
     Content-Type: application/json
     Content-Length: 57
 
-    {"title":"Hello World!","body":"This is my first post!"}
+    {"title":"Привет мир!","body":"Это моя первая запись в блоге!"}
 
-Response
-~~~~~~~~
+Ответ
+~~~~~
 
-The server responds with a 201 status code, telling us that the post was
-created. It tells us the ``Content-Type`` of the response, which is also
-JSON:
+Сервер отвечает кодом состояния 201, который сообщает нам о том, что запись была создана. Также, в заголовке ``Content-Type`` нам сообщают что формат тоже JSON:
 
 .. code-block:: text
 
@@ -43,15 +38,12 @@ JSON:
 
     {"id":"1","title":"Hello World!","body":"This is my first post!"}
 
-Parsing the request body
-------------------------
+Разбор тела запроса
+-------------------
 
-The request body should only be parsed as JSON if the ``Content-Type`` header
-begins with ``application/json``. Since we want to do this for every request,
-the easiest solution is to use an application before middleware.
+Тело запроса необходимо рассматривать как JSON только если в заголовке ``Content-Type`` указано ``application/json``. Так как мы хотим делать это для каждого запроса, самым простым решением будет использование прослойки ``before``.
 
-We simply use ``json_decode`` to parse the content of the request and then
-replace the request data on the ``$request`` object::
+Мы используем ``json_decode`` для разбора содержимого запроса, а затем заменим данные в объекте ``$request``::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\ParameterBag;
@@ -63,11 +55,10 @@ replace the request data on the ``$request`` object::
         }
     });
 
-Controller implementation
--------------------------
+Реализация контроллера
+----------------------
 
-Our controller will create a new blog post from the data provided and will
-return the post object, including its ``id``, as JSON::
+Наш контроллер будет создавать новую запись в блоге из переданных данных, а затем вернёт объект записи, включая её ``id`` в виде JSON::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
@@ -83,11 +74,10 @@ return the post object, including its ``id``, as JSON::
         return $app->json($post, 201);
     });
 
-Manual testing
---------------
+Ручное тестирование
+-------------------
 
-In order to manually test our API, we can use the ``curl`` command line
-utility, which allows sending HTTP requests:
+Для осуществления ручного тестирования нашего API мы можем использовать утилиту ``curl``, которая позволяет посылать HTTP-запросы:
 
 .. code-block:: bash
 

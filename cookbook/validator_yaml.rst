@@ -1,12 +1,9 @@
-How to use YAML to configure validation
-=======================================
+Как использовать YAML для настройки валидации
+=============================================
 
-Simplicity is at the heart of Silex so there is no out of the box solution to
-use YAML files for validation. But this doesn't mean that this is not
-possible. Let's see how to do it.
+Простота является одним из базовых принципов Silex, поэтому в комплекте поставки нет ничего, что могло бы использовать YAML-файлы для валидации. Но это отнюдь не означает, что это невозможно в принципе. Давайте посмотрим как это можно сделать.
 
-First, you need to install the YAML Component. Declare it as a dependency in
-your ``composer.json`` file:
+Во-первых, вам необходимо установить компонент YAML. Определите его как зависимость в вашем файле ``composer.json``:
 
 .. code-block:: json
 
@@ -14,8 +11,7 @@ your ``composer.json`` file:
         "symfony/yaml": "~2.1"
     }
 
-Next, you need to tell the Validation Service that you are not using
-``StaticMethodLoader`` to load your class metadata but a YAML file::
+Затем, вам необходимо сообщить службе валидации, что вы хотите использовать YAML-файл вместо загрузки класса метаданных через ``StaticMethodLoader``::
 
     $app->register(new ValidatorServiceProvider());
 
@@ -23,8 +19,7 @@ Next, you need to tell the Validation Service that you are not using
         new Symfony\Component\Validator\Mapping\Loader\YamlFileLoader(__DIR__.'/validation.yml')
     );
 
-Now, we can replace the usage of the static method and move all the validation
-rules to ``validation.yml``:
+Теперь, мы можем заменить использование статического метода и переместить все правила валидации в ``validation.yml``:
 
 .. code-block:: yaml
 

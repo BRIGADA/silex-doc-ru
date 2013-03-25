@@ -1,13 +1,12 @@
-Usage
-=====
+Использование
+=============
 
-This chapter describes how to use Silex.
+Эта глава описывает как использовать.
 
-Installation
-------------
+Установка
+---------
 
-If you want to get started fast, `download`_ Silex as an archive and extract
-it, you should have the following directory structure:
+Для быстрого начала `скачайте`_ архив Silex и распакуйте его. В результате вы получите слудующую структуру каталогов:
 
 .. code-block:: text
 
@@ -18,8 +17,7 @@ it, you should have the following directory structure:
     └── web
         └── index.php
 
-If you want more flexibility, use Composer instead. Create a
-``composer.json``:
+Если вы хотите большей гибкости, используйте Composer. Создайте ``composer.json``:
 
 .. code-block:: json
 
@@ -29,7 +27,7 @@ If you want more flexibility, use Composer instead. Create a
         }
     }
 
-And run Composer to install Silex and all its dependencies:
+И запустите Composer для установки Silex и всех зависимостей:
 
 .. code-block:: bash
 
@@ -38,24 +36,19 @@ And run Composer to install Silex and all its dependencies:
 
 .. tip::
 
-    By default, Silex relies on the stable Symfony components. If you want to
-    use their master version instead, add ``"minimum-stability": "dev"`` in
-    your ``composer.json`` file.
+    По умолчанию, Silex использует стабильные компоненты Symfony. Если вместо этого вы хотите использовать актуальные версии, добавьте ``"minimum-stability": "dev"`` в ваш файл ``composer.json``.
 
-Upgrading
----------
+Обновление
+----------
 
-Upgrading Silex to the latest version is as easy as running the ``update``
-command::
+Обновление Silex до последней версии легко выполнить, запустив команду ``update``::
 
     $ php composer.phar update
 
-Bootstrap
----------
+Загрузка
+--------
 
-To bootstrap Silex, all you need to do is require the ``vendor/autoload.php``
-file and create an instance of ``Silex\Application``. After your controller
-definitions, call the ``run`` method on your application::
+Для загрузки Silex, всё что вам требуется сделать - это включить файл ``vendor/autoload.php`` и создать экземпляр ``Silex\Application``. После определений ваших контроллеров, вызовете метод ``run`` вашего приложения::
 
     // web/index.php
 
@@ -67,66 +60,52 @@ definitions, call the ``run`` method on your application::
 
     $app->run();
 
-Then, you have to configure your web server (read the :doc:`dedicated chapter
-<web_servers>` for more information).
+Затем сконфигурируйте веб-сервер (подробности см. в :doc:`отдельной главе <web_servers>`).
 
 .. tip::
 
-    When developing a website, you might want to turn on the debug mode to
-    ease debugging::
+    При разработке веб-сайта, вам может потребоваться включить отладочный режим::
 
         $app['debug'] = true;
 
 .. tip::
 
-    If your application is hosted behind a reverse proxy and you want Silex to
-    trust the ``X-Forwarded-For*`` headers, you will need to run your
-    application like this::
+    Если ваше приложение располагается за прокси-сервером, и вы хотите чтобы Silex отслеживал заголовки ``X-Forwarded-For*``, то вым надо запустить ваше приложение следующим образом::
 
         use Symfony\Component\HttpFoundation\Request;
 
         Request::trustProxyData();
         $app->run();
 
-Routing
--------
+Маршрутизация
+-------------
 
-In Silex you define a route and the controller that is called when that
-route is matched.
+В Silex вы определяете маршрут и контроллер, который вызывается при соответствии запроса маршруту.
 
-A route pattern consists of:
+Шаблон маршрута состоит из:
 
-* *Pattern*: The route pattern defines a path that points to a resource. The
-  pattern can include variable parts and you are able to set RegExp
-  requirements for them.
+* *Шаблон*: Шаблон маршрута определяет путь, указывающий на ресурс. Шаблон может включать переменные части и вы можете задать RegExp-требования для них.
 
-* *Method*: One of the following HTTP methods: ``GET``, ``POST``, ``PUT`` or
-  ``DELETE``. This describes the interaction with the resource. Commonly only
-  ``GET`` and ``POST`` are used, but it is possible to use the others as well.
+* *Метод*: Один из следующих HTTP-методов: ``GET``, ``POST``, ``PUT`` или ``DELETE``. Описывает взаимодействие с ресурсом. Обчыно используются только ``GET`` и ``POST``, однако вы можете использовать и остальные.
 
-The controller is defined using a closure like this::
+Контроллер определяется с помощью замыкания следующего вида::
 
     function () {
-        // do something
+        // что-нибудь делаем
     }
 
-Closures are anonymous functions that may import state from outside of their
-definition. This is different from globals, because the outer state does not
-have to be global. For instance, you could define a closure in a function and
-import local variables of that function.
+Замыкания - это анонимные функции, которые могут импортировать состояние из-за пределов собственного определения. Например, вы можете определить замыкание в функции и импортировать локальные переменные этой функции.
 
 .. note::
 
-    Closures that do not import scope are referred to as lambdas. Because in
-    PHP all anonymous functions are instances of the ``Closure`` class, we
-    will not make a distinction here.
+    Замыкания, которые ничего не импортируют, называют лямбдами. Так как в PHP все анонимные функции являются экземплярами класса ``Closure``, мы не будем делать между ними разлиций.
 
-The return value of the closure becomes the content of the page.
+Возвращаемое значение замыкания становится контентом страницы.
 
-Example GET route
-~~~~~~~~~~~~~~~~~
+Пример GET-маршрута
+~~~~~~~~~~~~~~~~~~~
 
-Here is an example definition of a ``GET`` route::
+Ниже приведён пример определения ``GET``-маршрута::
 
     $blogPosts = array(
         1 => array(
@@ -147,15 +126,13 @@ Here is an example definition of a ``GET`` route::
         return $output;
     });
 
-Visiting ``/blog`` will return a list of blog post titles. The ``use``
-statement means something different in this context. It tells the closure to
-import the $blogPosts variable from the outer scope. This allows you to use it
-from within the closure.
+При посещении ``/blog`` будет возвращён список заголовков блога. Выражение ``use``
+сообщает о необходимости использования чего-либо не из текущего контекста. Оно импортирует в замыкание переменную $blogPosts из внешней области видимости. Это позволяет вам использовать переменную в замыкании.
 
-Dynamic routing
-~~~~~~~~~~~~~~~
+Динамическая маршрутизация
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now, you can create another controller for viewing individual blog posts::
+Теперь, вы можете создать другой контроллер для просмотра отдельных записей в блоге::
 
     $app->get('/blog/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
         if (!isset($blogPosts[$id])) {
@@ -168,21 +145,16 @@ Now, you can create another controller for viewing individual blog posts::
                 "<p>{$post['body']}</p>";
     });
 
-This route definition has a variable ``{id}`` part which is passed to the
-closure.
+Это определение маршрута имеет переменную часть ``{id}``, которая передаётся в замыкание.
 
-The current ``Application`` is automatically injected by Silex to the Closure
-thanks to the type hinting.
+Текушей экземпляр ``Application`` автоматически инжектируется Silex в Замыкание благодаря подсказке по типу.
 
-When the post does not exist, we are using ``abort()`` to stop the request
-early. It actually throws an exception, which we will see how to handle later
-on.
+Когда запись не существует, мы используем метод ``abort()`` для остановки запроса в самом начале. В действительности генерируется исключение, обработку которых мы обсудим позже.
 
-Example POST route
-~~~~~~~~~~~~~~~~~~
+Пример POST-маршрута
+~~~~~~~~~~~~~~~~~~~~
 
-POST routes signify the creation of a resource. An example for this is a
-feedback form. We will use the ``mail`` function to send an e-mail::
+POST-маршруты означают создание ресурсов. Примером тому является форма обратной связи. Мы будем использовать функцию ``mail`` для отправки электронной почты::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
@@ -194,33 +166,26 @@ feedback form. We will use the ``mail`` function to send an e-mail::
         return new Response('Thank you for your feedback!', 201);
     });
 
-It is pretty straightforward.
+Это довольно просто.
 
 .. note::
 
-    There is a :doc:`SwiftmailerServiceProvider <providers/swiftmailer>`
-    included that you can use instead of ``mail()``.
+    В базовый комплект включён :doc:`SwiftmailerServiceProvider <providers/swiftmailer>`, который вы можете использовать вместо ``mail()``.
+ н6:нн
+Текущий запрос ``request`` автоматически инжектируется Silex в в Замыкание благодаря подсказке по типу. Он представляет собой экземпляр `Request
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_, поэтому вы пожете получить переменные через метод ``get``.
 
-The current ``request`` is automatically injected by Silex to the Closure
-thanks to the type hinting. It is an instance of `Request
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html>`_,
-so you can fetch variables using the request ``get`` method.
-
-Instead of returning a string we are returning an instance of `Response
-<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html>`_.
-This allows setting an HTTP status code, in this case it is set to ``201
-Created``.
+Вместо возврата строки, мы возвращаем экземпляр `Response
+<http://api.symfony.com/master/Symfony/Component/HttpFoundation/Response.html>`_. Тем самым мы можем установить код состояния HTTP, в нашем случае ``201 Created``.
 
 .. note::
 
-    Silex always uses a ``Response`` internally, it converts strings to
-    responses with status code ``200 Ok``.
+    Silex всегда внутри использует ``Response``, строки конвертируются в ответы с кодом состояния ``200 Ok``.
 
-Other methods
+Другие методы
 ~~~~~~~~~~~~~
 
-You can create controllers for most HTTP methods. Just call one of these
-methods on your application: ``get``, ``post``, ``put``, ``delete``::
+Вы можете создавать контроллеры для большинства других методов HTTP. Просто вызовите один из этих методов в своём приложении: ``get``, ``post``, ``put`` или ``delete``::
 
     $app->put('/blog/{id}', function ($id) {
         ...
@@ -232,26 +197,21 @@ methods on your application: ``get``, ``post``, ``put``, ``delete``::
 
 .. tip::
 
-    Forms in most web browsers do not directly support the use of other HTTP 
-    methods. To use methods other than GET and POST you can utilize a special 
-    form field with a name of ``_method``. The form's ``method`` attribute must 
-    be set to POST when using this field::
+    Формы в большинстве браузеров напрямую не поддерживают использование других HTTP-методов. Для того, чтобы использовать методы отличные от GET и POST, вы можете вставить в форму специальное поле с именем ``_method``. При использовании этого поля атрибут ``method`` формы должен содержать значение POST::
 
         <form action="/my/target/route/" method="post">
             ...
             <input type="hidden" id="_method" name="_method" value="PUT" />
         </form>
 
-    If using Symfony Components 2.2+ you will need to explicitly enable this
-    method override::
+    Если вы используете компоненты Symfony 2.2+, вам необходивно явно включить переопределение метода::
 
         use Symfony\Component\HttpFoundation\Request;
 
         Request::enableHttpMethodParameterOverride();
         $app->run();
 
-You can also call ``match``, which will match all methods. This can be
-restricted via the ``method`` method::
+Вы также можете вызвать ``match``, что будет соответствовать всем методам. Ограничение можно наложить методом ``method``::
 
     $app->match('/blog', function () {
         ...
@@ -269,35 +229,31 @@ restricted via the ``method`` method::
 
 .. note::
 
-    The order in which the routes are defined is significant. The first
-    matching route will be used, so place more generic routes at the bottom.
+    Порядок, в котором определяются маршруты очень важен. Используется первый подходящий маршрут, поэтому располагайте более общие маршруты внизу.
 
 
-Route variables
-~~~~~~~~~~~~~~~
+Переменные маршрутов
+~~~~~~~~~~~~~~~~~~~~
 
-As it has been shown before you can define variable parts in a route like
-this::
+Как уже было показано, вы можете использовать в маршрутах переменные части::
 
     $app->get('/blog/{id}', function ($id) {
         ...
     });
 
-It is also possible to have more than one variable part, just make sure the
-closure arguments match the names of the variable parts::
+Также возможно использовать более одной переменной части, просто убедитесь что аргументы замыкания соответствуют именам переменных частей::
 
     $app->get('/blog/{postId}/{commentId}', function ($postId, $commentId) {
         ...
     });
 
-While it's not suggested, you could also do this (note the switched
-arguments)::
+Так как обязанности соблюдать порядок нет, вы можете менять аргументы местами::
 
     $app->get('/blog/{postId}/{commentId}', function ($commentId, $postId) {
         ...
     });
 
-You can also ask for the current Request and Application objects::
+Вы также можете запросить текущие объекты Request и Application::
 
     $app->get('/blog/{id}', function (Application $app, Request $request, $id) {
         ...
@@ -305,25 +261,22 @@ You can also ask for the current Request and Application objects::
 
 .. note::
 
-    Note for the Application and Request objects, Silex does the injection
-    based on the type hinting and not on the variable name::
+    Обратите внимание, что для объектов Application и Request, Silex делает инжектирование основываясь на подсказке о типе переменной, а не на имени::
 
         $app->get('/blog/{id}', function (Application $foo, Request $bar, $id) {
             ...
         });
 
-Route variables converters
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Конвертеры переменных маршрута
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before injecting the route variables into the controller, you can apply some
-converters::
+Перед инжектированием переменных маршрута в контроллер, вы можете применять конвертеры::
 
     $app->get('/user/{id}', function ($id) {
         // ...
     })->convert('id', function ($id) { return (int) $id; });
 
-This is useful when you want to convert route variables to objects as it
-allows to reuse the conversion code across different controllers::
+Это полезно, когда вы хотите конвертировать переменные маршрута в объекты, так как можно использовать код конвертера в различных контроллерах::
 
     $userProvider = function ($id) {
         return new User($id);
@@ -337,7 +290,7 @@ allows to reuse the conversion code across different controllers::
         // ...
     })->convert('user', $userProvider);
 
-The converter callback also receives the ``Request`` as its second argument::
+Вторым аргументом конвертер также получает ``Request``::
 
     $callback = function ($post, Request $request) {
         return new Post($request->attributes->get('slug'));
@@ -347,22 +300,19 @@ The converter callback also receives the ``Request`` as its second argument::
         // ...
     })->convert('post', $callback);
 
-Requirements
-~~~~~~~~~~~~
+Требования
+~~~~~~~~~~
 
-In some cases you may want to only match certain expressions. You can define
-requirements using regular expressions by calling ``assert`` on the
-``Controller`` object, which is returned by the routing methods.
+В некоторых случаях вам может потребоваться соответствие определённым выражениям. Вы можете определить требования используя регулярние выражения в методе ``assert`` объекта ``Controller``, который возвращается маршрутными методами.
 
-The following will make sure the ``id`` argument is numeric, since ``\d+``
-matches any amount of digits::
+Следующий код проверяет является ли ``id`` числом, так как ``\d+`` соответствует любому количеству цифр::
 
     $app->get('/blog/{id}', function ($id) {
         ...
     })
     ->assert('id', '\d+');
 
-You can also chain these calls::
+Также вы можете строить цепочки из этих вызовов::
 
     $app->get('/blog/{postId}/{commentId}', function ($postId, $commentId) {
         ...
@@ -370,27 +320,22 @@ You can also chain these calls::
     ->assert('postId', '\d+')
     ->assert('commentId', '\d+');
 
-Default values
-~~~~~~~~~~~~~~
+Значения по умолчанию
+~~~~~~~~~~~~~~~~~~~~~
 
-You can define a default value for any route variable by calling ``value`` on
-the ``Controller`` object::
+Вы можете определить значение по умолчанию для любой переменной маршрута, вызвав ``value`` объекта ``Controller``::
 
     $app->get('/{pageName}', function ($pageName) {
         ...
     })
     ->value('pageName', 'index');
 
-This will allow matching ``/``, in which case the ``pageName`` variable will
-have the value ``index``.
+Это позволит сделать соостветствующим маршрут ``/``, в данном случае переменная ``pageName`` будет иметь значение ``index``.
 
-Named routes
-~~~~~~~~~~~~
+Именованные маршруты
+~~~~~~~~~~~~~~~~~~~~
 
-Some providers (such as ``UrlGeneratorProvider``) can make use of named
-routes. By default Silex will generate a route name for you, that cannot
-really be used. You can give a route a name by calling ``bind`` on the
-``Controller`` object that is returned by the routing methods::
+Некоторые провайдеры (такие как ``UrlGeneratorProvider``) могут использовать именованные маршруты. По умолчанию, Silex генерирует имена маршрутов, которые в реальности не могут использоваться. Вы можете дать маршруту имя, вызвав ``bind`` объекта ``Controller``, который возвращается маршрутными методами::
 
     $app->get('/', function () {
         ...
@@ -405,15 +350,12 @@ really be used. You can give a route a name by calling ``bind`` on the
 
 .. note::
 
-    It only makes sense to name routes if you use providers that make use of
-    the ``RouteCollection``.
+    Смысл в именовании маршрутов появляется лишь тогда, когда вы задействуете провайдеров, использующих ``RouteCollection``.
 
-Controllers in classes
-~~~~~~~~~~~~~~~~~~~~~~
+Контроллеры в классах
+~~~~~~~~~~~~~~~~~~~~~
 
-If you don't want to use anonymous functions, you can also define your
-controllers as methods. By using the ``ControllerClass::methodName`` syntax,
-you can tell Silex to lazily create the controller object for you::
+Если вы не хотите использовать анонимные функции, то вы можете определить контроллеры как методы. Используя синтаксис ``КлассКонтроллера::имяМетода``, вы можете сообщить Silex to lazily create the controller object for you::
 
     $app->get('/', 'Igorw\Foo::bar');
 
@@ -710,31 +652,26 @@ setting::
 
 Read each provider chapter to learn more about the added methods.
 
-Security
---------
+Безопасность
+------------
 
-Make sure to protect your application against attacks.
+Убедитесь в том, что ваши приложения защищены от атак.
 
-Escaping
-~~~~~~~~
+Экранирование
+~~~~~~~~~~~~~
 
-When outputting any user input (either route variables GET/POST variables
-obtained from the request), you will have to make sure to escape it correctly,
-to prevent Cross-Site-Scripting attacks.
+При выводе любого пользовательского ввода (переменных маршрута, или переменных, полученных из запроса), вы должны убедиться в корректном экранировании для предотвращения XSS-атак.
 
-* **Escaping HTML**: PHP provides the ``htmlspecialchars`` function for this.
-  Silex provides a shortcut ``escape`` method::
+* **Экранирование HTML**: PHP для этого предлагает функцию ``htmlspecialchars``. В Silex есть более краткий метод ``escape``::
 
       $app->get('/name', function (Silex\Application $app) {
           $name = $app['request']->get('name');
           return "You provided the name {$app->escape($name)}.";
       });
 
-  If you use the Twig template engine you should use its escaping or even
-  auto-escaping mechanisms.
+  Если вы используете движок шаблонов Twig, вы должны использовать его экранирование или даже механизмы авто-экранирования.
 
-* **Escaping JSON**: If you want to provide data in JSON format you should
-  use the Silex ``json`` function::
+* **Экранирование JSON**: Если вы хотите передать данные в формате JSON, вы должны использовать Silex-функцию ``json``::
 
       $app->get('/name.json', function (Silex\Application $app) {
           $name = $app['request']->get('name');

@@ -1,26 +1,21 @@
-Providers
-=========
+Провайдеры
+==========
 
-Providers allow the developer to reuse parts of an application into another
-one. Silex provides two types of providers defined by two interfaces:
-``ServiceProviderInterface`` for services and ``ControllerProviderInterface``
-for controllers.
+Провайдеры позволяют разработчику использовать части одник приложений в других. Silex поддерживает два типа провайдеров, определяемых двумя интерфейсами: ``ServiceProviderInterface`` для служб и ``ControllerProviderInterface`` для контроллеров.
 
-Service Providers
------------------
+Провайдеры служб
+----------------
 
-Loading providers
-~~~~~~~~~~~~~~~~~
+Загрузка провайдеров
+~~~~~~~~~~~~~~~~~~~~
 
-In order to load and use a service provider, you must register it on the
-application::
+Чтобы загрузить и использовать провайдер службы, вы должны зарегистрировать его в приложении::
 
     $app = new Silex\Application();
 
     $app->register(new Acme\DatabaseServiceProvider());
 
-You can also provide some parameters as a second argument. These will be set
-**after** the provider is registered, but **before** it is booted::
+Также вы можете передать некоторые параметры вторым аргументом. Они будут установлены **после** регистрации провайдера, но **перед** его загрузкой::
 
     $app->register(new Acme\DatabaseServiceProvider(), array(
         'database.dsn'      => 'mysql:host=localhost;dbname=myapp',
@@ -28,30 +23,25 @@ You can also provide some parameters as a second argument. These will be set
         'database.password' => 'secret_root_password',
     ));
 
-Conventions
-~~~~~~~~~~~
+Соглашения
+~~~~~~~~~~
 
-You need to watch out in what order you do certain things when interacting
-with providers. Just keep to these rules:
+Вам необходимо следить за порядком выполнения некоторых вещей при взаимодействии с провайдерами. Просто придерживайтесь этих правил:
 
-* Overriding existing services must occur **after** the provider is
-  registered.
+* Переопределение существующих служб должно происходить **после** регистрации провайдера.
 
-  *Reason: If the service already exists, the provider will overwrite it.*
+  *Причина: если служба уже существует, провайдер её перепишет.*
 
-* You can set parameters any time **after** the provider is registered, but
-  **before** the service is accessed.
+* Вы можете устанавливать параметры в любое время **после** регистрации провайдера, но **перед** обращением к службе.
 
-  *Reason: Providers can set default values for parameters. Just like with
-  services, the provider will overwrite existing values.*
+  *Причина: провайдеры могут устанавливать некоторые значения по умолчанию для параметров. Также, как и в случае со службами, провайдер перезапишет существующие значения.*
 
-Make sure to stick to this behavior when creating your own providers.
+Убедитесь в том, что придерживаетесь такого поведения при создании собственных провайдеров.
 
-Included providers
-~~~~~~~~~~~~~~~~~~
+Включённые провайдеры
+~~~~~~~~~~~~~~~~~~~~~
 
-There are a few provider that you get out of the box. All of these are within
-the ``Silex\Provider`` namespace:
+Есть несколько провайдеров, которые вы получаете прямо из коробки. Все они располагаются в пространстве имён ``Silex\Provider``:
 
 * :doc:`DoctrineServiceProvider <providers/doctrine>`
 * :doc:`MonologServiceProvider <providers/monolog>`
@@ -67,19 +57,17 @@ the ``Silex\Provider`` namespace:
 * :doc:`SecurityServiceProvider <providers/security>`
 * :doc:`ServiceControllerServiceProvider <providers/service_controller>`
 
-Third party providers
-~~~~~~~~~~~~~~~~~~~~~
+Сторонние провайдеры
+~~~~~~~~~~~~~~~~~~~~
 
-Some service providers are developed by the community. Those third-party
-providers are listed on `Silex' repository wiki
-<https://github.com/fabpot/Silex/wiki/Third-Party-ServiceProviders>`_.
+Некоторые провайдеры служб разрабатываются сообществом. Эти сторонние провайдеры перечислены в `wiki-репозитории Silex <https://github.com/fabpot/Silex/wiki/Third-Party-ServiceProviders>`_.
 
-You are encouraged to share yours.
+Вы можете делиться вашими собственными.
 
-Creating a provider
+Создание провайдера
 ~~~~~~~~~~~~~~~~~~~
 
-Providers must implement the ``Silex\ServiceProviderInterface``::
+Провайдеры должны реализовывать ``Silex\ServiceProviderInterface``::
 
     interface ServiceProviderInterface
     {
@@ -88,13 +76,9 @@ Providers must implement the ``Silex\ServiceProviderInterface``::
         function boot(Application $app);
     }
 
-This is very straight forward, just create a new class that implements the two
-methods. In the ``register()`` method, you can define services on the
-application which then may make use of other services and parameters. In the
-``boot()`` method, you can configure the application, just before it handles a
-request.
+This is very straight forward, just create a new class that implements the two methods. В методе ``register()`` вы можете определить службы приложения, которые затем могут быть использованы другими службами и параметрами. В методе ``boot()`` вы можете конфигурировать приложение перед обработкой им запроса.
 
-Here is an example of such a provider::
+Ниже приведён пример такого провайдера::
 
     namespace Acme;
 
@@ -118,11 +102,9 @@ Here is an example of such a provider::
         }
     }
 
-This class provides a ``hello`` service which is a protected closure. It takes
-a ``name`` argument and will return ``hello.default_name`` if no name is
-given. If the default is also missing, it will use an empty string.
+Этот класс реализует службу ``hello`` как защищённое замыкание. Он принимает аргумент ``name`` и возвращает ``hello.default_name`` если никакое имя не указано. Если имя по умолчанию также не задано, возвращается пустая строка.
 
-You can now use this provider as follows::
+Теперь вы можете использовать этот провайдер следующим образом::
 
     $app = new Silex\Application();
 
@@ -136,36 +118,33 @@ You can now use this provider as follows::
         return $app['hello']($name);
     });
 
-In this example we are getting the ``name`` parameter from the query string,
-so the request path would have to be ``/hello?name=Fabien``.
+В этом примере мы получаем параметр ``name`` из строки запроса, поэтому путь запроса должен иметь вид ``/hello?name=Fabien``.
 
-Controllers providers
----------------------
+Провайдеры контроллеров
+-----------------------
 
-Loading providers
-~~~~~~~~~~~~~~~~~
+Загрузка провайдеров
+~~~~~~~~~~~~~~~~~~~~
 
-In order to load and use a controller provider, you must "mount" its
-controllers under a path::
+Для загрузки и использования провайдера контроллера вы должны "смонтировать" его контроллеры по определённому пути::
 
     $app = new Silex\Application();
 
     $app->mount('/blog', new Acme\BlogControllerProvider());
 
-All controllers defined by the provider will now be available under the
-``/blog`` path.
+Теперь все определённые провайдером контроллеры доступны по пути ``/blog``.
 
-Creating a provider
+Создание провайдера
 ~~~~~~~~~~~~~~~~~~~
 
-Providers must implement the ``Silex\ControllerProviderInterface``::
+Провайдеры должны реализовывать ``Silex\ControllerProviderInterface``::
 
     interface ControllerProviderInterface
     {
         function connect(Application $app);
     }
 
-Here is an example of such a provider::
+Ниже приведён пример такого провайдера::
 
     namespace Acme;
 
@@ -176,7 +155,7 @@ Here is an example of such a provider::
     {
         public function connect(Application $app)
         {
-            // creates a new controller based on the default route
+            // создание нового контроллера для маршрута по умолчанию
             $controllers = $app['controllers_factory'];
 
             $controllers->get('/', function (Application $app) {
@@ -187,25 +166,20 @@ Here is an example of such a provider::
         }
     }
 
-The ``connect`` method must return an instance of ``ControllerCollection``.
-``ControllerCollection`` is the class where all controller related methods are
-defined (like ``get``, ``post``, ``match``, ...).
+Метод ``connect`` должен возвращать экземпляр ``ControllerCollection``. ``ControllerCollection`` -- это класс, в котором определены все связанные с контроллером методы (такие как ``get``, ``post``, ``match``, ...).
 
 .. tip::
 
-    The ``Application`` class acts in fact as a proxy for these methods.
+    Класс ``Application`` по факту выступает как прокси для этих методов.
 
-You can now use this provider as follows::
+Теперь вы може использовать этот провайдер следующим образом::
 
     $app = new Silex\Application();
 
     $app->mount('/blog', new Acme\HelloControllerProvider());
 
-In this example, the ``/blog/`` path now references the controller defined in
-the provider.
+В этом примере, путь ``/blog/`` относится к контроллерам, которые определяются провайдером.
 
 .. tip::
 
-    You can also define a provider that implements both the service and the
-    controller provider interface and package in the same class the services
-    needed to make your controllers work.
+    Вы также можете определить провайдер, который будет реализовывать оба интерфейса одновременно.
