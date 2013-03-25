@@ -1,31 +1,21 @@
 FormServiceProvider
 ===================
 
-The *FormServiceProvider* provides a service for building forms in
-your application with the Symfony2 Form component.
+*FormServiceProvider* представляет службу для построения форм в вашем приложении с помощью компонента Symfony2 Form.
 
-Parameters
-----------
+Параметры
+---------
 
-* **form.secret**: This secret value is used for generating and validating the
-  CSRF token for a specific page. It is very important for you to set this
-  value to a static randomly generated value, to prevent hijacking of your
-  forms. Defaults to ``md5(__DIR__)``.
+* **form.secret**: Это значение секрета, которое используется для генерации и валидации токена CSRF. Для вас очень важно задать здесь статическое случайно сгенерированное значение, чтобы предотвратить "угон" форм. Значение по умолчанию -- ``md5(__DIR__)``.
 
-Services
---------
+Службы
+------
 
-* **form.factory**: An instance of `FormFactory
-  <http://api.symfony.com/master/Symfony/Component/Form/FormFactory.html>`_,
-  that is used for build a form.
+* **form.factory**: Экземпляр `FormFactory <http://api.symfony.com/master/Symfony/Component/Form/FormFactory.html>`_, который используется для построения форм.
 
-* **form.csrf_provider**: An instance of an implementation of the
-  `CsrfProviderInterface
-  <http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/CsrfProviderInterface.html>`_,
-  defaults to a `DefaultCsrfProvider
-  <http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/DefaultCsrfProvider.html>`_.
+* **form.csrf_provider**: Экземпляр реализации `CsrfProviderInterface <http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/CsrfProviderInterface.html>`_, по умолчанию `DefaultCsrfProvider <http://api.symfony.com/master/Symfony/Component/Form/Extension/Csrf/CsrfProvider/DefaultCsrfProvider.html>`_.
 
-Registering
+Регистрация
 -----------
 
 .. code-block:: php
@@ -36,21 +26,16 @@ Registering
 
 .. note::
 
-    If you don't want to create your own form layout, it's fine: a default one
-    will be used. But you will have to register the
-    :doc:`translation provider <providers/translation>` as the default form
-    layout requires it.
+    Если вы не хотите создавать собственную разметку для формы, то используется заданный по умолчанию.
+    В этом случае вам необходимо зарегистрировать :doc:`провайдер Translation <providers/translation>`.
 
-    If you want to use validation with forms, do not forget to register the
-    :doc:`Validator provider <providers/validator>`.
+    Если вы хотите использовать валидацию, то не забудте зарегистрировать :doc:`провайдер Validator <providers/validator>`.
 
 .. note::
 
-    The Symfony Form Component and all its dependencies (optional or not) comes
-    with the "fat" Silex archive but not with the regular one.
+    Компонент Symfony Form и все его зависимости (опциональные и нет) поставляются только в "большом" архиве Silex.
 
-    If you are using Composer, add it as a dependency to your
-    ``composer.json`` file:
+    Если вы используете Composer, добавьте зависимость в файл ``composer.json``:
 
     .. code-block:: json
 
@@ -58,9 +43,7 @@ Registering
             "symfony/form": "~2.1.4"
         }
 
-    If you are going to use the validation extension with forms, you must also
-    add a dependency to the ``symfony/config`` and ```symfony/translation``
-    components:
+    Если вы будете использовать расширение validation, вы должны также добавить зависимости для ``symfony/config`` и ```symfony/translation``:
 
     .. code-block:: json
 
@@ -70,8 +53,7 @@ Registering
             "symfony/translation": "~2.1"
         }
 
-    The Symfony Form Component relies on the PHP intl extension. If you don't have
-    it, you can install the Symfony Locale Component as a replacement:
+    Компонент Symfony Form зависит от PHP-расширения intl. Если у вас его нет, то в качестве замены вы можете установить компонент Symfony Locale:
 
     .. code-block:: json
 
@@ -79,8 +61,7 @@ Registering
             "symfony/locale": "~2.1"
         }
 
-    If you want to use forms in your Twig templates, make sure to install the
-    Symfony Twig Bridge:
+    Если вы хотите использовать формы в шаблонах Twig, убедитесь что установили Symfony Twig Bridge:
 
     .. code-block:: json
 
@@ -88,14 +69,13 @@ Registering
             "symfony/twig-bridge": "~2.1"
         }
 
-Usage
------
+Использование
+-------------
 
-The FormServiceProvider provides a ``form.factory`` service. Here is a usage
-example::
+FormServiceProvider предоставляет службу ``form.factory``. Вот пример использования::
 
     $app->match('/form', function (Request $request) use ($app) {
-        // some default data for when the form is displayed the first time
+        // некоторые начальные данные при отображении формы первый раз
         $data = array(
             'name' => 'Your name',
             'email' => 'Your email',
@@ -116,19 +96,18 @@ example::
             if ($form->isValid()) {
                 $data = $form->getData();
 
-                // do something with the data
+                // делаем что-нибудь с данными
 
-                // redirect somewhere
+                // редирект куда-нибудь
                 return $app->redirect('...');
             }
         }
 
-        // display the form
+        // отображение формы
         return $app['twig']->render('index.twig', array('form' => $form->createView()));
     });
 
-And here is the ``index.twig`` form template (requires ``symfony/twig-
-bridge``):
+Шаблон формы ``index.twig`` (требуется ``symfony/twig-bridge``):
 
 .. code-block:: jinja
 
@@ -138,8 +117,7 @@ bridge``):
         <input type="submit" name="submit" />
     </form>
 
-If you are using the validator provider, you can also add validation to your
-form by adding constraints on the fields::
+Если вы используете провайдер валидации, вы также можете добавить его к форме, указав ограничения для полей::
 
     use Symfony\Component\Validator\Constraints as Assert;
 
@@ -162,7 +140,7 @@ form by adding constraints on the fields::
         ))
         ->getForm();
 
-You can register form extensions by extending ``form.extensions``::
+Вы можете зарегистрировать расширение формы, расширив ``form.extensions``::
 
     $app['form.extensions'] = $app->share($app->extend('form.extensions', function ($extensions) use ($app) {
         $extensions[] = new YourTopFormExtension();
@@ -171,7 +149,7 @@ You can register form extensions by extending ``form.extensions``::
     }));
 
 
-You can register form type extensions by extending ``form.type.extensions``::
+Вы можете зарегистрировать расширение типа формы, расширив ``form.type.extensions``::
 
     $app['form.type.extensions'] = $app->share($app->extend('form.type.extensions', function ($extensions) use ($app) {
         $extensions[] = new YourFormTypeExtension();
@@ -179,7 +157,7 @@ You can register form type extensions by extending ``form.type.extensions``::
         return $extensions;
     }));
 
-You can register form type guessers by extending ``form.type.guessers``::
+Вы можете зарегистрировать "отгадыватель" типа формы, расширив ``form.type.guessers``::
 
     $app['form.type.guessers'] = $app->share($app->extend('form.type.guessers', function ($guessers) use ($app) {
         $guessers[] = new YourFormTypeGuesser();
@@ -187,16 +165,15 @@ You can register form type guessers by extending ``form.type.guessers``::
         return $guessers;
     }));
 
-Traits
-------
+Особенности
+-----------
 
-``Silex\Application\FormTrait`` adds the following shortcuts:
+``Silex\Application\FormTrait`` добавляет следующие ярлыки:
 
-* **form**: Creates a FormBuilder instance.
+* **form**: Создаёт экземпляр FormBuilder.
 
 .. code-block:: php
 
     $app->form($data);
 
-For more information, consult the `Symfony2 Forms documentation
-<http://symfony.com/doc/2.1/book/forms.html>`_.
+Больше информации содержится в `документации Symfony2 Forms <http://symfony.com/doc/2.1/book/forms.html>`_.

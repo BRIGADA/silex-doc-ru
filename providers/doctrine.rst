@@ -1,55 +1,46 @@
 DoctrineServiceProvider
 =======================
 
-The *DoctrineServiceProvider* provides integration with the `Doctrine DBAL
-<http://www.doctrine-project.org/projects/dbal>`_ for easy database access.
+*DoctrineServiceProvider* обеспечивает интеграцию с `Doctrine DBAL <http://www.doctrine-project.org/projects/dbal>`_ для более лёгкого доступа к базе данных.
 
 .. note::
 
-    There is only a Doctrine DBAL. An ORM service is **not** supplied.
+    Здесь только Doctrine DBAL. Служба ORM **не поставляется**.
 
-Parameters
-----------
+Параметры
+---------
 
-* **db.options**: Array of Doctrine DBAL options.
+* **db.options**: Массив опций Doctrine DBAL.
 
-  These options are available:
+  Доступные опции:
 
-  * **driver**: The database driver to use, defaults to ``pdo_mysql``.
-    Can be any of: ``pdo_mysql``, ``pdo_sqlite``, ``pdo_pgsql``,
-    ``pdo_oci``, ``oci8``, ``ibm_db2``, ``pdo_ibm``, ``pdo_sqlsrv``.
+  * **driver**: Используемый драйвер БД, по умолчанию ``pdo_mysql``.
+    Возможные варианты: ``pdo_mysql``, ``pdo_sqlite``, ``pdo_pgsql``, ``pdo_oci``, ``oci8``, ``ibm_db2``, ``pdo_ibm``, ``pdo_sqlsrv``.
 
-  * **dbname**: The name of the database to connect to.
+  * **dbname**: Имя используемой БД.
 
-  * **host**: The host of the database to connect to. Defaults to
-    localhost.
+  * **host**: Хост сервера БД. По умолчанию ``localhost``.
 
-  * **user**: The user of the database to connect to. Defaults to
-    root.
+  * **user**: Имя пользователя БД. По умолчанию ``root``.
 
-  * **password**: The password of the database to connect to.
+  * **password**: Пароль пользователя БД.
 
-  * **charset**: Only relevant for ``pdo_mysql``, ``pdo_oci`` and ``oci8``,
-    specifies the charset used when connecting to the database.
+  * **charset**: Действительно только для ``pdo_mysql``, ``pdo_oci`` и ``oci8``; указывает используемый набор символов.
+    
+  * **path**: Действительно только для ``pdo_sqlite``, указывает путь к файлу БД.
 
-  * **path**: Only relevant for ``pdo_sqlite``, specifies the path to
-    the SQLite database.
+  Эти и другие опции более подробно описаны в `документации Doctrine DBAL <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html>`_.
 
-  These and additional options are described in detail in the `Doctrine DBAL
-  configuration documentation <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html>`_.
+Службы
+------
 
-Services
---------
+* **db**: Соединение с БД, экземпляр ``Doctrine\DBAL\Connection``.
 
-* **db**: The database connection, instance of
-  ``Doctrine\DBAL\Connection``.
+* **db.config**: Конфигурационный объект Doctrine. По умолчанию пустой ``Doctrine\DBAL\Configuration``.
 
-* **db.config**: Configuration object for Doctrine. Defaults to
-  an empty ``Doctrine\DBAL\Configuration``.
+* **db.event_manager**: Диспетчер событий Doctrine.
 
-* **db.event_manager**: Event Manager for Doctrine.
-
-Registering
+Регистрация
 -----------
 
 .. code-block:: php
@@ -63,9 +54,7 @@ Registering
 
 .. note::
 
-    Doctrine DBAL comes with the "fat" Silex archive but not with the regular
-    one. If you are using Composer, add it as a dependency to your
-    ``composer.json`` file:
+    Doctrine DBAL поставляется только в "большом" архиве Silex, а не в обычном. Если вы используете Composer, добавьте зависимость в файл ``composer.json``:
 
     .. code-block:: json
 
@@ -73,11 +62,10 @@ Registering
             "doctrine/dbal": "2.2.*",
          }
 
-Usage
------
+Использование
+-------------
 
-The Doctrine provider provides a ``db`` service. Here is a usage
-example::
+Этот провайдер предоставляет службу ``db``. Вот пример использования::
 
     $app->get('/blog/{id}', function ($id) use ($app) {
         $sql = "SELECT * FROM posts WHERE id = ?";
@@ -87,13 +75,11 @@ example::
                 "<p>{$post['body']}</p>";
     });
 
-Using multiple databases
-------------------------
+Использование нескольких БД
+---------------------------
 
-The Doctrine provider can allow access to multiple databases. In order to
-configure the data sources, replace the **db.options** with **dbs.options**.
-**dbs.options** is an array of configurations where keys are connection names
-and values are options::
+Этот провайдер допускает доступ к нескольким БД одновременно. Чтобы сконфигурировать источники данных, замените **db.options** на **dbs.options**.
+**dbs.options** -- это массив конфигураций, где ключами являются имена соединений, а значения -- опциями::
 
     $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'dbs.options' => array (
@@ -116,15 +102,13 @@ and values are options::
         ),
     ));
 
-The first registered connection is the default and can simply be accessed as
-you would if there was only one connection. Given the above configuration,
-these two lines are equivalent::
+Первое зарегистрированное соединение будет соединением по умолчанию и вы можете получить к нему доступ также, как и в случае с одной БД. Применительно к указанной выше конфигурации следующие две строки эквивалентны::
 
     $app['db']->fetchAssoc('SELECT * FROM table');
 
     $app['dbs']['mysql_read']->fetchAssoc('SELECT * FROM table');
 
-Using multiple connections::
+Использование нескольких соединений::
 
     $app->get('/blog/{id}', function ($id) use ($app) {
         $sql = "SELECT * FROM posts WHERE id = ?";
@@ -137,5 +121,4 @@ Using multiple connections::
                 "<p>{$post['body']}</p>";
     });
 
-For more information, consult the `Doctrine DBAL documentation
-<http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/>`_.
+Более подробная информация содержится в `документации Doctrine DBAL <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/>`_.

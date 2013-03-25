@@ -1,33 +1,26 @@
 HttpCacheServiceProvider
 ========================
 
-The *HttpCacheProvider* provides support for the Symfony2 Reverse Proxy.
+*HttpCacheProvider* обеспечивает поддержку Symfony2 Reverse Proxy.
 
-Parameters
-----------
+Параметры
+---------
 
-* **http_cache.cache_dir**: The cache directory to store the HTTP cache data.
+* **http_cache.cache_dir**: Каталог, используемый для хранения кешировнных данных HTTP.
 
-* **http_cache.options** (optional): An array of options for the `HttpCache
-  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_
-  constructor.
+* **http_cache.options** (опциональный): Массив опций для конструктора `HttpCache <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_.
 
-Services
---------
+Службы
+------
 
-* **http_cache**: An instance of `HttpCache
-  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_.
+* **http_cache**: Экземпляр `HttpCache <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/HttpCache.html>`_.
 
-* **http_cache.esi**: An instance of `Esi
-  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Esi.html>`_,
-  that implements the ESI capabilities to Request and Response instances.
+* **http_cache.esi**: Экземпляр `Esi <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Esi.html>`_, который реализует ESI-возможности для экземпляров Request и Response.
 
-* **http_cache.store**: An instance of `Store
-  <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Store.html>`_,
-  that implements all the logic for storing cache metadata (Request and Response
-  headers).
+* **http_cache.store**: Экземпляр `Store <http://api.symfony.com/master/Symfony/Component/HttpKernel/HttpCache/Store.html>`_,
+  который реализует всю логику сохранения метаданных кеша (заголовки Request и Response).
 
-Registering
+Регистрация
 -----------
 
 .. code-block:: php
@@ -36,11 +29,10 @@ Registering
         'http_cache.cache_dir' => __DIR__.'/cache/',
     ));
 
-Usage
------
+Использование
+-------------
 
-Silex already supports any reverse proxy like Varnish out of the box by
-setting Response HTTP cache headers::
+Silex уже поддерживает обратные прокси, такие как Varnish, установкой в Response специальных заголовков HTTP::
 
     use Symfony\Component\HttpFoundation\Response;
 

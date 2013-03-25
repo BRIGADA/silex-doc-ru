@@ -11,13 +11,11 @@ How to make sub-requests
 
 * ``$request``: Экземпляр класса ``Request``, который представляет HTTP-запрос.
 
-* ``$type``: Должен быть или ``HttpKernelInterface::MASTER_REQUEST`` или ``HttpKernelInterface::SUB_REQUEST``. Certain listeners are only executed for the master request, so it's important that this is set to ``SUB_REQUEST``.
+* ``$type``: Должен быть или ``HttpKernelInterface::MASTER_REQUEST`` или ``HttpKernelInterface::SUB_REQUEST``. Некоторые листенеры исполняются только для мастер-запросов, поэтому важно указать в этом параметре значение ``SUB_REQUEST``.
 
-* ``$catch``: Catches exceptions and turns them into a response with status code
-  ``500``. This argument defaults to ``true``. For sub-requests you will most
-  likely want to set it to ``false``.
+* ``$catch``: Отлавливать исключения и возвращать их в ответе с кодом состояния ``500``. Этот аргумент по умолчанию имеет значение ``true``. Для подзапросов вам скорее всего захочется установить ``false``.
 
-By calling ``handle``, you can make a sub-request manually. Here's an example::
+Вызывая ``handle``, вы можете вручную делать подзапросы. Вот пример::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -25,12 +23,9 @@ By calling ``handle``, you can make a sub-request manually. Here's an example::
     $subRequest = Request::create('/');
     $response = $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
 
-There's some more things that you need to keep in mind though. In most cases
-you will want to forward some parts of the current master request to the sub-
-request. That includes: Cookies, server information, session.
+Однако, есть ещё несколько вещей, которые следует учитывать. В большинстве случаев, вам скорее всего потребуется передать в подзапрос некоторые части мастер-запроса. Имеются ввиду плюшки (куки), информация сервера, сессия.
 
-Here is a more advanced example that forwards said information (``$request``
-holds the master request)::
+Вот более сложный пример, который передаёт дополнительную информацию (``$request`` хранит мастер-запрос)::
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -42,8 +37,7 @@ holds the master request)::
 
     $response = $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
 
-To forward this response to the client, you can simply return it from a
-controller::
+Для отправки ответа клиенту, вы можете просто вернуть его из контролллера::
 
     use Silex\Application;
     use Symfony\Component\HttpFoundation\Request;
@@ -56,8 +50,7 @@ controller::
         return $response;
     });
 
-If you want to embed the response as part of a larger page you can call
-``Response::getContent``::
+Если вы хотите встроить ответ в большую страницу, вы можете вызвать ``Response::getContent``::
 
     $header = ...;
     $footer = ...;
@@ -65,18 +58,16 @@ If you want to embed the response as part of a larger page you can call
 
     return $header.$body.$footer;
 
-Rendering pages in Twig templates
----------------------------------
+Вывод страниц в шаблонах Twig
+-----------------------------
 
-The :doc:`TwigServiceProvider </providers/twig>` provides a ``render``
-function that you can use in Twig templates. It gives you a convenient way to
-embed pages.
+:doc:`TwigServiceProvider </providers/twig>` содержит функцию ``render``, которая может использоваться вами в шаблонах Twig. Это удобный способ встраивания страниц.
 
 .. code-block:: jinja
 
     {{ render('/sidebar') }}
 
-For details, refer to the :doc:`TwigServiceProvider </providers/twig>` docs.
+Подробности смотри в документации к :doc:`TwigServiceProvider </providers/twig>`.
 
 Edge Side Includes
 ------------------
