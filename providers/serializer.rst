@@ -1,40 +1,40 @@
 SerializerServiceProvider
 ===========================
 
-The *SerializerServiceProvider* provides a service for serializing objects.
+*SerializerServiceProvider* предоставляет службу для сериализации объектов.
 
-Parameters
-----------
+Параметры
+---------
 
-None.
+Нет.
 
-Services
---------
+Службы
+------
 
-* **serializer**: An instance of `Symfony\Component\Serializer\Serializer
+* **serializer**: Экземпляр `Symfony\Component\Serializer\Serializer
   <http://api.symfony.com/master/Symfony/Component/Serializer/Serializer.html>`_.
 
 * **serializer.encoders**: `Symfony\Component\Serializer\Encoder\JsonEncoder
   <http://api.symfony.com/master/Symfony/Component/Serializer/Encoder/JsonEncoder.html>`_
-  and `Symfony\Component\Serializer\Encoder\XmlEncoder
+  и `Symfony\Component\Serializer\Encoder\XmlEncoder
   <http://api.symfony.com/master/Symfony/Component/Serializer/Encoder/XmlEncoder.html>`_.
 
 * **serializer.normalizers**: `Symfony\Component\Serializer\Normalizer\CustomNormalizer
   <http://api.symfony.com/master/Symfony/Component/Serializer/Normalizer/CustomNormalizer.html>`_
-  and `Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+  и `Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
   <http://api.symfony.com/master/Symfony/Component/Serializer/Normalizer/GetSetMethodNormalizer.html>`_.
 
-Registering
+Регистрация
 -----------
 
 .. code-block:: php
 
     $app->register(new Silex\Provider\SerializerServiceProvider());
 
-Usage
------
+Использование
+-------------
 
-The ``SerializerServiceProvider`` provider provides a ``serializer`` service:
+Провайдер ``SerializerServiceProvider`` предоставляет службу ``serializer``:
 
 .. code-block:: php
 
@@ -46,10 +46,10 @@ The ``SerializerServiceProvider`` provider provides a ``serializer`` service:
     
     $app->register(new SerializerServiceProvider());
     
-    // only accept content types supported by the serializer via the assert method.
+    // поддерживаемые сериализатором типы содержимого задаём через метод assert.
     $app->get("/pages/{id}.{_format}", function ($id) use ($app) {
-        // assume a page_repository service exists that returns Page objects. The
-        // object returned has getters and setters exposing the state.
+        // Предположим существование службы page_repository, которая возвращает объекты Page.
+        // Эти объекты имею геггеры и сеттеры, позволяющие получать и изменять их состояние.
         $page = $app['page_repository']->find($id);
         $format = $app['request']->getRequestFormat();
     
