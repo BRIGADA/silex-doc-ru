@@ -79,8 +79,8 @@ SessionServiceProvider
     });
 
 
-Custom Session Configurations
------------------------------
+Специальные конфигурации сессий
+-------------------------------
 
 Если ваша система использует специальную конфигурацию сессий (обработчик redis из расширений PHP),
 то вам необходимо отключить NativeFileSessionHandler, установив ``session.storage.handler`` в null,
