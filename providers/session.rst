@@ -1,66 +1,57 @@
 SessionServiceProvider
 ======================
 
-The *SessionServiceProvider* provides a service for storing data persistently
-between requests.
+*SessionServiceProvider* предоставляет службу для хранения данных между запросами.
 
-Parameters
-----------
+Параметры
+---------
 
-* **session.storage.save_path** (optional): The path for the
-  ``NativeFileSessionHandler``, defaults to the value of
-  ``sys_get_temp_dir()``.
+* **session.storage.save_path** (опциональный): Путь для ``NativeFileSessionHandler``, по умолчанию ``sys_get_temp_dir()``.
 
-* **session.storage.options**: An array of options that is passed to the
-  constructor of the ``session.storage`` service.
+* **session.storage.options**: Массив параметров, которые передаются в конструктор службы ``session.storage``.
 
-  In case of the default `NativeSessionStorage
+  В случае используемого по умолчанию класса `NativeSessionStorage
   <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/NativeSessionStorage.html>`_,
-  the most useful options are:
+  наиболее полезные опции следующие:
 
-  * **name**: The cookie name (_SESS by default)
-  * **id**: The session id (null by default)
-  * **cookie_lifetime**: Cookie lifetime
-  * **cookie_path**: Cookie path
-  * **cookie_domain**: Cookie domain
-  * **cookie_secure**: Cookie secure (HTTPS)
-  * **cookie_httponly**: Whether the cookie is http only
+  * **name**: Имя печеньки (куки) (по умолчанию ``_SESS``)
+  * **id**: Идентификатор сессии (по умолчанию ``null``)
+  * **cookie_lifetime**: Время жизни печеньки (куки)
+  * **cookie_path**: Путь печеньки (куки)
+  * **cookie_domain**: Домен печеньки (куки)
+  * **cookie_secure**: Безопасность (HTTPS)
+  * **cookie_httponly**: Печенька (кука) только ли для HTTP
 
-  However, all of these are optional. Sessions last as long as the browser is
-  open. To override this, set the ``lifetime`` option.
+  Однако, все они опциональны. Сессия длится до тех пор, пока открыт браузер.
+  Для изменения этого поведения установите значение опции ``lifetime``.
 
-  For a full list of available options, read the `PHP
-  <http://php.net/session.configuration>`_ official documentation.
+  Полный список всех доступных опций приведён в официальной `документации PHP  <http://php.net/session.configuration>`_.
 
-* **session.test**: Whether to simulate sessions or not (useful when writing
-  functional tests).
+* **session.test**: Требуется ли симуляция сессий или нет (полезно при написании функциональных тестов).
 
-Services
---------
+Службы
+------
 
-* **session**: An instance of Symfony2's `Session
+* **session**: Экземпляр класса `Session
   <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Session.html>`_.
 
-* **session.storage**: A service that is used for persistence of the session
-  data.
+* **session.storage**: Служба, используемая для хранения данных сессии.
 
-* **session.storage.handler**: A service that is used by the
-  ``session.storage`` for data access. Defaults to a `NativeFileSessionHandler
-  <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/NativeFileSessionHandler.html>`_
-  storage handler.
+* **session.storage.handler**: Служба, используемая ``session.storage`` для доступа к данным.
+  По умолчанию используется обработчик `NativeFileSessionHandler
+  <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/NativeFileSessionHandler.html>`_.
 
-Registering
+Регистрация
 -----------
 
 .. code-block:: php
 
     $app->register(new Silex\Provider\SessionServiceProvider());
 
-Usage
------
+Использование
+-------------
 
-The Session provider provides a ``session`` service. Here is an example that
-authenticates a user and creates a session for him::
+Провайдер сессий предоставляет службу ``session``. Ниже приведён пример аутентификации пользователя и создания сессии для него::
 
     use Symfony\Component\HttpFoundation\Response;
 
@@ -91,10 +82,9 @@ authenticates a user and creates a session for him::
 Custom Session Configurations
 -----------------------------
 
-If your system is using a custom session configuration (such as a redis handler
-from a PHP extension) then you need to disable the NativeFileSessionHandler by
-setting ``session.storage.handler`` to null. You will have to configure the
-``session.save_path`` ini setting yourself in that case.
+Если ваша система использует специальную конфигурацию сессий (обработчик redis из расширений PHP),
+то вам необходимо отключить NativeFileSessionHandler, установив ``session.storage.handler`` в null,
+а также верно указать значение ``session.save_path``.
 
 .. code-block:: php
 
