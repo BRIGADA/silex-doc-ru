@@ -1,18 +1,17 @@
-Phar File
+Phar-файл
 =========
 
 .. caution::
 
-    Using the Silex ``phar`` file is deprecated. You should use Composer
-    instead to install Silex and its dependencies or download one of the
-    archives.
+    Использование файла ``phar`` признано устаревшим. Вместо этого, для установки Silex и зависимостей вы должны
+    использовать Composer или скачать один из архивов.
 
-Installing
-----------
+Установка
+---------
 
-Installing Silex is as easy as downloading the `phar
-<http://silex.sensiolabs.org/get/silex.phar>`_ and storing it somewhere on
-the disk. Then, require it in your script::
+Установка Silex проста также, как скачивание `phar
+<http://silex.sensiolabs.org/get/silex.phar>`_ и сохранение его где-нибудь на диске.
+Затем, вы должны объвить его требующимся в вашем скрипте::
 
     <?php
 
@@ -26,46 +25,44 @@ the disk. Then, require it in your script::
 
     $app->run();
 
-Console
+Консоль
 -------
 
-Silex includes a lightweight console for updating to the latest version.
+Silex включает легковесную консоль для обновления до последней версии.
 
-To find out which version of Silex you are using, invoke ``silex.phar`` on the
-command-line with ``version`` as an argument:
+Для определения используемой вами версии Silex, вызовете в командной строке ``silex.phar`` с указанием
+аргумента ``version``:
 
 .. code-block:: text
 
     $ php silex.phar version
     Silex version 0a243d3 2011-04-17 14:49:31 +0200
 
-To check that your are using the latest version, run the ``check`` command:
+Для проверки того, что вы используете последнюю версию, запустите команду ``check``:
 
 .. code-block:: text
 
     $ php silex.phar check
 
-To update ``silex.phar`` to the latest version, invoke the ``update``
-command:
+Для обновления ``silex.phar`` до последней версии, вызовете команду ``update``:
 
 .. code-block:: text
 
     $ php silex.phar update
 
-This will automatically download a new ``silex.phar`` from
-``silex.sensiolabs.org`` and replace the existing one.
+Это позволит автоматически скачать новый ``silex.phar`` с сайта ``silex.sensiolabs.org`` и заменить существующий.
 
-Pitfalls
---------
+Подводные камни
+---------------
 
-There are some things that can go wrong. Here we will try and outline the
-most frequent ones.
+Существую несколько особенностей, из-за которых всё может пойти не так, как ожидается.
+Здесь мы попытаемся описать наиболее часто встречающиеся.
 
-PHP configuration
-~~~~~~~~~~~~~~~~~
+Конфигурация PHP
+~~~~~~~~~~~~~~~~
 
-Certain PHP distributions have restrictive default Phar settings. Setting
-the following may help.
+Некоторые дистрибутивы PHP имеют настройки по умолчанию, ограничивающие Phar.
+Установка следующего должна помочь.
 
 .. code-block:: ini
 
@@ -73,7 +70,7 @@ the following may help.
     phar.readonly = Off
     phar.require_hash = Off
 
-If you are on Suhosin you will also have to set this:
+Если вы используете Suhosin, вам также требуется установить это:
 
 .. code-block:: ini
 
@@ -81,28 +78,26 @@ If you are on Suhosin you will also have to set this:
 
 .. note::
 
-    Ubuntu's PHP ships with Suhosin, so if you are using Ubuntu, you will need
-    this change.
+    В Ubuntu PHP поставляется с Suhosin, поэтому если вы используете Ubuntu, вам необходимо сделать это изменение.
 
-Phar-Stub bug
-~~~~~~~~~~~~~
+Ошибка Phar
+~~~~~~~~~~~
 
-Some PHP installations have a bug that throws a ``PharException`` when trying
-to include the Phar. It will also tell you that ``Silex\Application`` could not
-be found. A workaround is using the following include line::
+В некоторые случаях PHP содержит ошибку, котороя выбрасывает исключение ``PharException`` при попытке включения Phar.
+Также вам сообщается о невозможности найти ``Silex\Application``.
+Решение заключается в использовании следующей строки включения::
 
     require_once 'phar://'.__DIR__.'/silex.phar/autoload.php';
 
-The exact cause of this issue could not be determined yet.
+Точная причина этой неполадки всё ещё не известна.
 
-ioncube loader bug
-~~~~~~~~~~~~~~~~~~
+Ошибка загрузчика Ioncube
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ioncube loader is an extension that can decode PHP encoded file.
-Unfortunately, old versions (prior to version 4.0.9) are not working well
-with phar archives.
-You must either upgrade Ioncube loader to version 4.0.9 or newer or disable it
-by commenting or removing this line in your php.ini file:
+Загрузчик Ioncube - это расширение, которое расшифровывает зашифрованные PHP-файлы.
+К сожалению, старые версии (до версии 4.0.9) не работают с phar-архивами.
+Вы должны обновить Ioncube до версии 4.0.9 или более новой, или же отключить его в php.ini, закоментировав
+или удалив строку:
 
 .. code-block:: ini
 
